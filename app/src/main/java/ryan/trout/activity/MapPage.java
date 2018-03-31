@@ -1,6 +1,7 @@
 package ryan.trout.activity;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -22,7 +23,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
 
+import com.google.maps.android.data.Layer;
+import com.google.maps.android.data.kml.KmlLayer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +50,7 @@ public class MapPage extends FragmentActivity  implements OnMapReadyCallback, Go
     private List<Marker> guageMarkers, aStreamMarkers;
     private boolean aStreamsDisplayed=false, guagesDisplayed=false;
     SupportMapFragment mapFragment;
+    private KmlLayer layer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +66,7 @@ public class MapPage extends FragmentActivity  implements OnMapReadyCallback, Go
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
         plot_guages_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,15 +86,25 @@ public class MapPage extends FragmentActivity  implements OnMapReadyCallback, Go
         plot_stream_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isStreamsOn()) {
-                    showMarkers(aStreamMarkers);
+                if(!layer.isLayerOnMap()) {
+                    //showMarkers(aStreamMarkers);
                     plot_stream_btn.setText("Hide Streams");
-                    setaStreamDisplay();
+                    try {
+                        layer.addLayerToMap();
+                        Log.e("layer add:","is layer added");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (XmlPullParserException e) {
+                        e.printStackTrace();
+                    }
                 }else{
-                    //hide guages
                     plot_stream_btn.setText("Show Streams");
-                    hideMarkers(aStreamMarkers);
-                    setaStreamDisplay();
+                    //hideMarkers(aStreamMarkers);
+                    try {
+                        layer.removeLayerFromMap();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -110,6 +128,20 @@ public class MapPage extends FragmentActivity  implements OnMapReadyCallback, Go
                 getAStreams();
         map.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
         map.setOnInfoWindowClickListener(this);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //layer = new KmlLayer(map, R.raw.classa_str_2018, getApplicationContext());
+                    layer = new KmlLayer(map, R.raw.classa_str_2018, getApplicationContext());
+                    //(Get-Content c:\temp\test.txt).replace('<MultiGeometry>', '') | Set-Content c:\temp\test.txt
+                } catch (XmlPullParserException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 

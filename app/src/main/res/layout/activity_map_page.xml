@@ -18,14 +18,14 @@
         tools:context="ryan.trout.MapPage"/>
 
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Show Streams"
-            android:gravity="center_horizontal|center_vertical"
-            android:layout_weight="1"
-            />
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Show Streams"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_weight="1"
+        />
 
     <Button
         android:id="@+id/button2"
