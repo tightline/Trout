@@ -6,11 +6,16 @@ package ryan.trout.helper;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.kml.KmlLayer;
 
 import ryan.trout.R;
 
@@ -40,6 +45,11 @@ public class PopupAdapter implements InfoWindowAdapter {
         tv=(TextView)popup.findViewById(R.id.snippet);
         tv.setText(marker.getSnippet());
 
+
         return(popup);
     }
+
+
+
+
 }
